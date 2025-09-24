@@ -1,0 +1,11 @@
+# Python virtual environment
+venv/
+__pycache__/
+
+# IDE and editor folders
+.vscode/
+.idea/
+
+# Local data files
+*.csv
+models/
