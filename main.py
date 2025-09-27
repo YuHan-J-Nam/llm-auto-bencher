@@ -1,36 +1,57 @@
 # Import Libraries
 import psutil
 import subprocess
+import shlex # library to help safely split command strings
 
-def get_cpu_and_ram_info():
-	return {"CPU_count": psutil.cpu_count(),
-		"MEM_size": psutil.virtual_memory().total / (1024**3)}
+def get_hardware_specs():
+	"""
+	Detects CPU, RAM, and NVIDIA GPU hardware specifications.
+	Returns a dictionary containing all the specs.
+	"""
 
-hardware_specs = get_cpu_and_ram_info()
+	# 1. Obtain server CPU and RAM info
+	specs = {
+		"cpu_cores": psutil.cpu_count(),
+		"ram_total_gb": round(psutil.virtual_memory().total / (1024**3), 2)
+	}
 
-print(f"Number of CPUs: {hardware_specs['CPU_count']}")
-print(f"Size of Memory: {hardware_specs['MEM_size']:.2f}GB")
+	# 2. Try to obtain NVIDIA GPU info
 
-def call_nvidia_smi():
+	# Initialize null values in case there is no NVIDIA GPU 
+	specs['gpu_model'] = "N/A"
+	specs['gpu_driver_version'] = "N/A"
+	specs['gpu_vram_gb'] = 0
+
 	try:
-		result = subprocess.run("nvidia-smi --query-gpu=gpu_name,driver_version,memory.total --format=csv,noheader,nounits",
-			capture_output=True,
-			text=True,
-			check=True)
-		return result.stdout.strip().split(',')
+		command = [
+			"nvidia-smi",
+			"--query-gpu=gpu_name,driver_version,memory.total",
+			"--format=csv,noheader,nounits"
+		]
+		smi_output = subprocess.check_output(command, text=True)
+
+		# Parse nvidia-smi results
+		gpu_info = smi_output.strip().split(',')
+		specs['gpu_model']=gpu_info[0].strip()
+		specs['gpu_driver_version']=gpu_info[1].strip()
+		specs['gpu_vram_gb'] = round(int(gpu_info[2].strip())/1024, 2)
+
 	except subprocess.CalledProcessError as e:
 		print(f"Error running nvidia-smi: {e}")
-		return None, None, None
 	except FileNotFoundError:
-		print("nvidia-smi not found. Please make sure nvidia drivers are installed.")
-		return None, None, None
-	except (IndexError, ValueError) as e:
-		print(f"Error parsing nvidia-smi output: {e}")
-		return None, None, None
+		print("nvidia-smi not found. Please make sure NVIDIA drivers are installed.")
 
-GPU_model, driver_ver, VRAM_size = call_nvidia_smi()
-hardware_specs['GPU_model'] = GPU_model
-hardware_specs['driver_ver'] = driver_ver
-hardware_specs['VRAM_size'] = VRAM_size
+	return specs
 
-print(hardware_specs)
+# Main execution block
+if __name__ == "__main__":
+	print("Detecting hardware specifications")
+	hardware_specs = get_hardware_specs()
+
+	print("\n--- System Information ---")
+	print(f"CPU Cores: {hardware_specs['cpu_cores']}")
+	print(f"Total RAM: {hardware_specs['ram_total_gb']} GB")
+	print(f"GPU Model: {hardware_specs['gpu_model']}")
+	print(f"GPU VRAM: {hardware_specs['gpu_vram_gb']} GB")
+	print(f"NVIDIA Driver Version: {hardware_specs['gpu_driver_version']}")
+	print("--------------------------")
