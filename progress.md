@@ -28,7 +28,19 @@ This document tracks the milestones and progress for the LLM Auto-Bencher projec
     *   Consolidates all collected data into a single, structured dictionary for easy use.
 
 #### Milestone 1B: Shell Script Equivalent
-*   **Status:** ⏳ **Up Next**
-*   **Description:** To be developed for educational and comparative purposes. This script will replicate the hardware detection using pure shell commands (`lscpu`, `free`, `awk`, `grep`, etc.).
+*   **Status:** ✅ **Completed**
+*   **Description:** Developed a parallel shell script (`shell_equivalents/detect_hardware.sh`) for educational comparison.
+*   **Key Features:**
+    *   Detects CPU cores and total RAM using `lscpu`, `free`, `grep`, and `awk`.
+    *   Demonstrated floating-point math in Bash using `awk` for data conversion (MB to GB).
+    *   Detects NVIDIA GPU details by parsing output from `nvidia-smi`.
+    *   Implemented robust error handling using `if command -v ...` to manage systems without a GPU, highlighting a key difference from Python's `try/except` block.
 
 ---
+
+### Phase 3: Milestone 2 - Running an LLM via Docker
+
+*   **Status:** ⏳ **Up Next**
+*   **Description:** The goal is to get a standard LLM running in a Docker container, exposing an API endpoint that we can communicate with for benchmarking.
+
+----
