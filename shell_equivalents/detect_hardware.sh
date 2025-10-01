@@ -9,6 +9,19 @@ echo "CPU Cores:  $CPU_CORES"
 TOTAL_RAM_GB=$(free -m | grep "^Mem:" | awk '{printf "%.2f", $2 / 1024}')
 echo "Total RAM: $TOTAL_RAM_GB GB"
 
+# --- Disk Information ---
+# Use df, grep, and awk to get all disk info for the root partition in one go
+df -BM | grep -w '/' | awk '{
+	device=$1;
+	total_gb=$2/1024;
+	used_gb=$3/1024;
+	free_gb=$4/1024;
+	printf "Root Partition Device: %s\n", device;
+	printf "  - Total Size: %.2f GB\n", total_gb;
+	printf "  - Used Space: %.2f GB\n", used_gb;
+	printf "  - Free Space: %.2f GB\n", free_gb;
+}'
+
 # --- GPU Detection with Error Handling ---
 if command -v nvidia-smi &> /dev/null
 then

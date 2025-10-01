@@ -24,6 +24,7 @@ This document tracks the milestones and progress for the LLM Auto-Bencher projec
 *   **Key Features:**
     *   Detects CPU core count and total system RAM using the `psutil` library.
     *   Detects NVIDIA GPU model, VRAM, and driver version by programmatically calling the `nvidia-smi` command.
+    *   **Detects root partition device name, total, used, and free disk space using `psutil`.**
     *   Implements robust `try...except` error handling to gracefully manage systems without NVIDIA GPUs or drivers.
     *   Consolidates all collected data into a single, structured dictionary for easy use.
 
@@ -34,7 +35,8 @@ This document tracks the milestones and progress for the LLM Auto-Bencher projec
     *   Detects CPU cores and total RAM using `lscpu`, `free`, `grep`, and `awk`.
     *   Demonstrated floating-point math in Bash using `awk` for data conversion (MB to GB).
     *   Detects NVIDIA GPU details by parsing output from `nvidia-smi`.
-    *   Implemented robust error handling using `if command -v ...` to manage systems without a GPU, highlighting a key difference from Python's `try/except` block.
+    *   **Detects root partition disk details using `df`, `grep`, and `awk`.**
+    *   Implemented robust error handling using `if command -v ...` to manage systems without a GPU.
 
 ---
 
@@ -43,4 +45,4 @@ This document tracks the milestones and progress for the LLM Auto-Bencher projec
 *   **Status:** ⏳ **Up Next**
 *   **Description:** The goal is to get a standard LLM running in a Docker container, exposing an API endpoint that we can communicate with for benchmarking.
 
-----
+---

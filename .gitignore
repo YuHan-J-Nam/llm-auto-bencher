@@ -9,3 +9,6 @@ __pycache__/
 # Local data files
 *.csv
 models/
+
+# Others
+프로젝트계획서.md

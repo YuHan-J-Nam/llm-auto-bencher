@@ -15,7 +15,20 @@ def get_hardware_specs():
 		"ram_total_gb": round(psutil.virtual_memory().total / (1024**3), 2)
 	}
 
-	# 2. Try to obtain NVIDIA GPU info
+	# 2. Obtain Disk info
+	root_partition_device = "N/A"
+	for part in psutil.disk_partitions():
+		if part.mountpoint == '/':
+			root_partition_device = part.device
+			break
+
+	disk_usage = psutil.disk_usage('/')
+	specs["disk_name"] = root_partition_device
+	specs["disk_total_gb"] = round(disk_usage.total / (1024**3), 2)
+	specs["disk_used_gb"] = round(disk_usage.used / (1024**3), 2)
+	specs["disk_free_gb"] = round(disk_usage.free / (1024**3), 2)
+
+	# 3. Try to obtain NVIDIA GPU info
 
 	# Initialize null values in case there is no NVIDIA GPU 
 	specs['gpu_model'] = "N/A"
@@ -45,12 +58,18 @@ def get_hardware_specs():
 
 # Main execution block
 if __name__ == "__main__":
-	print("Detecting hardware specifications")
+	print("Detecting hardware specifications...")
 	hardware_specs = get_hardware_specs()
 
 	print("\n--- System Information ---")
 	print(f"CPU Cores: {hardware_specs['cpu_cores']}")
 	print(f"Total RAM: {hardware_specs['ram_total_gb']} GB")
+	print("--- Disk Information ---")
+	print(f"Root Partition Device: {hardware_specs['disk_name']}")
+	print(f"  - Total Size: {hardware_specs['disk_total_gb']} GB")
+	print(f"  - Used Space: {hardware_specs['disk_used_gb']} GB")
+	print(f"  - Free Space: {hardware_specs['disk_free_gb']} GB")
+	print("--- GPU Information ---")
 	print(f"GPU Model: {hardware_specs['gpu_model']}")
 	print(f"GPU VRAM: {hardware_specs['gpu_vram_gb']} GB")
 	print(f"NVIDIA Driver Version: {hardware_specs['gpu_driver_version']}")
