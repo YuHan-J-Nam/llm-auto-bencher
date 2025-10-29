@@ -1,21 +1,18 @@
 # Project Plan: LLM Auto-Bencher
 
 ### Vision Statement
-To create a portable benchmarking tool that automatically profiles a server's hardware and measures LLM performance. The project will serve as a hands-on learning experience by developing a robust Python-based application alongside pure shell script equivalents for direct comparison.
+To create a portable, intelligent tool that profiles a server's hardware and empowers users by dynamically discovering and recommending compatible LLMs from public registries, then provides the tools to benchmark their real-world performance.
 
 ### Goals & Objectives
-- **Automated Profiling:** Eliminate manual hardware checks.
-- **Reproducibility:** Use Docker for consistent LLM environments.
-- **Data-Driven Insights:** Generate structured data on key performance metrics.
-- **Dual-Path Learning:** For each core task, develop and document both a robust Python implementation and a traditional Linux shell script equivalent to understand the trade-offs in reliability, maintainability, and development speed.
+- **Automated Hardware Profiling:** Reliably detect server hardware (CPU, GPU, RAM, Disk).
+- **Dynamic Model Discovery:** Fetch an up-to-date list of available models by querying public APIs (e.g., Ollama's).
+- **Intelligent Recommendation Engine:** Analyze hardware specs and model data to generate a clear, tabular recommendation of which models are suitable for the user's system.
+- **Standardized Benchmarking:** Provide scripts to measure key performance metrics (latency, tokens/second) against a running LLM service.
+- **Dual-Path Learning:** Maintain a parallel set of shell scripts to contrast with the Python implementation and deepen system-level understanding.
 
-### Project Scope
-
-| In-Scope (What we will build first) | Out-of-Scope (What we can add later) |
-| :--- | :--- |
-| Hardware Detection: CPU (cores, model), RAM (total), GPU (model, VRAM), Disk. | Detailed network or PCIe bus speed analysis. |
-| LLM Support: Test pre-configured models like Llama 3 and Mistral 7B. | Fine-tuning models. |
-| Benchmarking: Measure inference latency and throughput (tokens/second). | Complex accuracy benchmarks (e.g., MMLU). |
-| User Interface: A Command-Line Interface (CLI). | A graphical user interface (GUI) or web dashboard. |
-| Data Storage: Save benchmark results to a local CSV or JSON file. | A dedicated database. |
-| OS Support: Develop on Ubuntu, with a goal for broader Linux support. | Windows or macOS support. |
+### Technical Stack & Architecture
+- **Language:** Python 3.10+, Bash Shell Script
+- **Key Libraries:** `psutil` (hardware), `requests` (API communication), `tabulate` (output formatting)
+- **Primary Data Source:** Ollama's public web API for the model library.
+- **Target LLM Service:** Ollama API endpoint for benchmarking.
+- **Version Control:** Git, GitHub
